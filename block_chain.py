@@ -31,7 +31,7 @@ class BlockChain:
                 return False
             if not self.valid_proof(self.hash(last_block), block['proof']):
                 return False
-
+            print(self.hash(last_block))
             last_block = block
             current_index += 1
         return True
@@ -67,7 +67,7 @@ class BlockChain:
             'timestamp': time(),
             'transactions': self.current_transactions,
             'proof': proof,
-            'previous_hash': previous_hash or self.hash(all_blocks_string)
+            'previous_hash': previous_hash or self.hash(self.chain[-1])
         }
 
         self.current_transactions = []
@@ -91,17 +91,17 @@ class BlockChain:
         return self.chain[-1]
 
     @staticmethod
-    def valid_proof(previous_hash, proof):
+    def valid_proof(current_hash, proof):
         """Checks if this proof is fine or not"""
 
-        guess = f'{previous_hash}{proof}'.encode()
+        guess = f'{current_hash}{proof}'.encode()
         guess_hash = hashlib.sha256(guess).hexdigest()
         return guess_hash[:4] == '0000'
 
-    def proof_of_work(self, previous_hash):
+    def proof_of_work(self, current_hash):
         """Shows the work is done"""
         proof = 0
-        while self.valid_proof(previous_hash, proof) is False:
+        while self.valid_proof(current_hash, proof) is False:
             proof += 1
         return proof
 
@@ -116,8 +116,7 @@ def mine():
     """This will mine and  will add it to the chain"""
     last_block = block_chain.last_block
     previous_hash = block_chain.hash(last_block)
-    proof = block_chain.proof_of_work(previous_hash)
-
+    proof = block_chain.proof_of_work(current_hash=previous_hash)
     block_chain.new_transaction(sender='0', recipient=node_identifier, amount=50)
     block = block_chain.new_block(proof, previous_hash)
     response = {
@@ -189,4 +188,4 @@ def consensus():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=sys.argv[1])
+    app.run(host='0.0.0.0', port=6001)
