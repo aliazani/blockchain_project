@@ -114,10 +114,11 @@ block_chain = BlockChain()
 def mine():
     """This will mine and  will add it to the chain"""
     last_block = block_chain.last_block
-    previous_hash = block_chain.hash(last_block)
-    proof = block_chain.proof_of_work(current_hash=previous_hash)
+    current_hash = block_chain.hash(last_block)
+    print(current_hash)
+    proof = block_chain.proof_of_work(current_hash=current_hash)
     block_chain.new_transaction(sender='0', recipient=node_identifier, amount=50)
-    block = block_chain.new_block(proof, previous_hash)
+    block = block_chain.new_block(proof, previous_hash=current_hash)
     response = {
         'message': 'New block forged',
         'index': block['index'],
