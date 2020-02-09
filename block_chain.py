@@ -27,8 +27,8 @@ class BlockChain:
         current_index = 1
         while current_index < len(chain):
             block = chain[current_index]
-            if block['previous_hash'] != self.hash(last_block):
-                return False
+            # if block['previous_hash'] != self.hash(last_block):
+            #     return False
             if not self.valid_proof(self.hash(last_block), block['proof']):
                 return False
             last_block = block
@@ -189,3 +189,4 @@ def consensus():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=6001)
+
