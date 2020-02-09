@@ -31,7 +31,6 @@ class BlockChain:
                 return False
             if not self.valid_proof(self.hash(last_block), block['proof']):
                 return False
-            print(self.hash(last_block))
             last_block = block
             current_index += 1
         return True
